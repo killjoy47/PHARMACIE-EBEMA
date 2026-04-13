@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharmacie EBEMA — Gestion</title>
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar d-flex flex-column" id="sidebar">
+  <div class="sidebar-brand d-flex align-items-center px-3 py-3">
+    <i class="bi bi-capsule-pill fs-2 me-2 text-success"></i>
+    <span class="fw-bold fs-5">Pharmacie<br><small class="text-success">EBEMA</small></span>
+  </div>
+  <hr class="border-secondary mx-3 my-0" />
+  <nav class="sidebar-nav flex-grow-1 mt-2">
+    <a href="#" class="nav-link active" data-page="dashboard">
+      <i class="bi bi-speedometer2"></i> Tableau de bord
+    </a>
+    <a href="#" class="nav-link" data-page="medicaments">
+      <i class="bi bi-capsule"></i> Médicaments
+    </a>
+    <a href="#" class="nav-link" data-page="stock">
+      <i class="bi bi-boxes"></i> Stock
+    </a>
+    <a href="#" class="nav-link" data-page="ventes">
+      <i class="bi bi-cart3"></i> Ventes
+    </a>
+    <a href="#" class="nav-link" data-page="historique">
+      <i class="bi bi-clock-history"></i> Historique
+    </a>
+    <a href="#" class="nav-link" data-page="fournisseurs">
+      <i class="bi bi-truck"></i> Fournisseurs
+    </a>
+  </nav>
+  <div class="px-3 py-2 text-muted small">v1.0 © 2024 EBEMA</div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content" id="mainContent">
+
+  <!-- Topbar -->
+  <nav class="topbar d-flex align-items-center justify-content-between px-4">
+    <button class="btn btn-sm btn-outline-secondary" id="toggleSidebar">
+      <i class="bi bi-list fs-5"></i>
+    </button>
+    <span class="fw-semibold text-secondary" id="pageTitle">Tableau de bord</span>
+    <div class="d-flex align-items-center gap-3">
+      <span class="text-muted small" id="clockDisplay"></span>
+      <i class="bi bi-person-circle fs-4 text-secondary"></i>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE: DASHBOARD ===== -->
+  <section id="page-dashboard" class="page-section p-4">
+    <h4 class="mb-4">Tableau de bord</h4>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card bg-primary-subtle border-start border-primary border-4 rounded-3 p-3 d-flex align-items-center gap-3">
+          <i class="bi bi-currency-dollar fs-1 text-primary"></i>
+          <div>
+            <div class="text-muted small">Ventes du jour</div>
+            <div class="fw-bold fs-5" id="kpi-ventes-jour">0 FC</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card bg-success-subtle border-start border-success border-4 rounded-3 p-3 d-flex align-items-center gap-3">
+          <i class="bi bi-capsule fs-1 text-success"></i>
+          <div>
+            <div class="text-muted small">Médicaments</div>
+            <div class="fw-bold fs-5" id="kpi-medicaments">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card bg-warning-subtle border-start border-warning border-4 rounded-3 p-3 d-flex align-items-center gap-3">
+          <i class="bi bi-exclamation-triangle fs-1 text-warning"></i>
+          <div>
+            <div class="text-muted small">Alertes stock bas</div>
+            <div class="fw-bold fs-5" id="kpi-alertes">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="kpi-card bg-info-subtle border-start border-info border-4 rounded-3 p-3 d-flex align-items-center gap-3">
+          <i class="bi bi-receipt fs-1 text-info"></i>
+          <div>
+            <div class="text-muted small">Transactions auj.</div>
+            <div class="fw-bold fs-5" id="kpi-transactions">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Low stock alert table -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-warning-subtle fw-semibold">
+        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Médicaments en rupture de stock imminente
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="table-alertes">
+            <thead class="table-light"><tr><th>Médicament</th><th>Catégorie</th><th>Qté en stock</th><th>Seuil min.</th></tr></thead>
+            <tbody id="tbody-alertes">
+              <tr><td colspan="4" class="text-center text-muted py-3">Aucune alerte</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE: MEDICAMENTS ===== -->
+  <section id="page-medicaments" class="page-section p-4 d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="mb-0">Médicaments</h4>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalMedicament" id="btnAddMedicament">
+        <i class="bi bi-plus-lg me-1"></i>Ajouter
+      </button>
+    </div>
+    <div class="input-group mb-3 w-auto" style="max-width:350px">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control" id="searchMedicament" placeholder="Rechercher un médicament…" />
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>#</th><th>Nom</th><th>Catégorie</th><th>Forme</th>
+                <th>Prix unitaire (FC)</th><th>Stock</th><th>Seuil min.</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-medicaments">
+              <tr><td colspan="8" class="text-center text-muted py-3">Aucun médicament enregistré</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE: STOCK ===== -->
+  <section id="page-stock" class="page-section p-4 d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="mb-0">Gestion du stock</h4>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEntreeStock">
+        <i class="bi bi-plus-lg me-1"></i>Entrée de stock
+      </button>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>#</th><th>Médicament</th><th>Catégorie</th><th>Qté actuelle</th><th>Seuil min.</th><th>Statut</th></tr>
+            </thead>
+            <tbody id="tbody-stock">
+              <tr><td colspan="6" class="text-center text-muted py-3">Aucun produit</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE: VENTES ===== -->
+  <section id="page-ventes" class="page-section p-4 d-none">
+    <h4 class="mb-4">Caisse — Nouvelle vente</h4>
+    <div class="row g-4">
+      <!-- Product selection -->
+      <div class="col-lg-7">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Sélection des produits</div>
+          <div class="card-body">
+            <div class="row g-2 mb-3">
+              <div class="col-8">
+                <select class="form-select" id="selectMedicamentVente">
+                  <option value="">-- Choisir un médicament --</option>
+                </select>
+              </div>
+              <div class="col-2">
+                <input type="number" class="form-control" id="qteVente" min="1" value="1" placeholder="Qté" />
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary w-100" id="btnAddToCart">
+                  <i class="bi bi-cart-plus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm mb-0">
+                <thead class="table-light">
+                  <tr><th>Produit</th><th>Qté</th><th>P.U.</th><th>Total</th><th></th></tr>
+                </thead>
+                <tbody id="tbody-panier">
+                  <tr id="panier-empty"><td colspan="5" class="text-center text-muted py-2">Panier vide</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Checkout -->
+      <div class="col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold">Récapitulatif</div>
+          <div class="card-body">
+            <dl class="row mb-2">
+              <dt class="col-6">Sous-total</dt>
+              <dd class="col-6 text-end" id="sous-total">0 FC</dd>
+              <dt class="col-6 fw-bold fs-5">Total</dt>
+              <dd class="col-6 text-end fw-bold fs-5 text-success" id="total-vente">0 FC</dd>
+            </dl>
+            <hr />
+            <div class="mb-3">
+              <label class="form-label">Montant reçu (FC)</label>
+              <input type="number" class="form-control" id="montantRecu" min="0" value="0" />
+            </div>
+            <dl class="row">
+              <dt class="col-6">Rendu-monnaie</dt>
+              <dd class="col-6 text-end fw-bold text-primary" id="rendu-monnaie">0 FC</dd>
+            </dl>
+            <div class="mb-3">
+              <label class="form-label">Client (facultatif)</label>
+              <input type="text" class="form-control" id="clientNom" placeholder="Nom du client" />
+            </div>
+            <button class="btn btn-success w-100" id="btnValiderVente">
+              <i class="bi bi-check-circle me-1"></i>Valider la vente
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE: HISTORIQUE ===== -->
+  <section id="page-historique" class="page-section p-4 d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="mb-0">Historique des ventes</h4>
+      <button class="btn btn-outline-danger btn-sm" id="btnClearHistory">
+        <i class="bi bi-trash me-1"></i>Vider l'historique
+      </button>
+    </div>
+    <div class="row g-2 mb-3">
+      <div class="col-auto">
+        <input type="date" class="form-control" id="filterDate" />
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-outline-secondary" id="btnResetFilter"><i class="bi bi-x-circle"></i> Réinitialiser</button>
+      </div>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr><th>#</th><th>Date &amp; heure</th><th>Client</th><th>Produits</th><th>Total (FC)</th></tr>
+            </thead>
+            <tbody id="tbody-historique">
+              <tr><td colspan="5" class="text-center text-muted py-3">Aucune vente enregistrée</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PAGE: FOURNISSEURS ===== -->
+  <section id="page-fournisseurs" class="page-section p-4 d-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="mb-0">Fournisseurs</h4>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalFournisseur">
+        <i class="bi bi-plus-lg me-1"></i>Ajouter
+      </button>
+    </div>
+    <div class="row g-3" id="grid-fournisseurs">
+      <div class="col-12 text-muted text-center py-3">Aucun fournisseur enregistré</div>
+    </div>
+  </section>
+
+</div><!-- /main-content -->
+
+<!-- ============================================================
+     MODALS
+     ============================================================ -->
+
+<!-- Modal: Médicament (add/edit) -->
+<div class="modal fade" id="modalMedicament" tabindex="-1">
+  <div class="modal-dialog">
+    <form class="modal-content" id="formMedicament" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalMedicamentTitle">Ajouter un médicament</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="medId" />
+        <div class="mb-3">
+          <label class="form-label">Nom <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="medNom" required />
+        </div>
+        <div class="row g-2">
+          <div class="col-6 mb-3">
+            <label class="form-label">Catégorie</label>
+            <select class="form-select" id="medCategorie">
+              <option>Antibiotique</option>
+              <option>Analgésique</option>
+              <option>Antipaludéen</option>
+              <option>Antifongique</option>
+              <option>Antiviral</option>
+              <option>Antiparasitaire</option>
+              <option>Vitamines / Suppléments</option>
+              <option>Dermatologie</option>
+              <option>Gastro-entérologie</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="col-6 mb-3">
+            <label class="form-label">Forme pharmaceutique</label>
+            <select class="form-select" id="medForme">
+              <option>Comprimé</option>
+              <option>Gélule</option>
+              <option>Sirop</option>
+              <option>Injection</option>
+              <option>Crème / Pommade</option>
+              <option>Suppositoire</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="row g-2">
+          <div class="col-6 mb-3">
+            <label class="form-label">Prix unitaire (FC) <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="medPrix" min="0" required />
+          </div>
+          <div class="col-6 mb-3">
+            <label class="form-label">Quantité initiale</label>
+            <input type="number" class="form-control" id="medQuantite" min="0" value="0" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Seuil d'alerte (qté min.)</label>
+          <input type="number" class="form-control" id="medSeuil" min="0" value="5" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description / Indication</label>
+          <textarea class="form-control" id="medDescription" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-success" id="btnSaveMedicament">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Entrée de stock -->
+<div class="modal fade" id="modalEntreeStock" tabindex="-1">
+  <div class="modal-dialog">
+    <form class="modal-content" id="formEntreeStock" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title">Entrée de stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Médicament <span class="text-danger">*</span></label>
+          <select class="form-select" id="stockMedSelect" required></select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Quantité à ajouter <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" id="stockQte" min="1" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Fournisseur</label>
+          <input type="text" class="form-control" id="stockFournisseur" placeholder="Nom du fournisseur" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Note</label>
+          <input type="text" class="form-control" id="stockNote" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Fournisseur -->
+<div class="modal fade" id="modalFournisseur" tabindex="-1">
+  <div class="modal-dialog">
+    <form class="modal-content" id="formFournisseur" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalFournisseurTitle">Ajouter un fournisseur</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="fournId" />
+        <div class="mb-3">
+          <label class="form-label">Nom / Société <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="fournNom" required />
+        </div>
+        <div class="row g-2">
+          <div class="col-6 mb-3">
+            <label class="form-label">Téléphone</label>
+            <input type="tel" class="form-control" id="fournTel" />
+          </div>
+          <div class="col-6 mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="fournEmail" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Adresse</label>
+          <input type="text" class="form-control" id="fournAdresse" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Produits fournis</label>
+          <textarea class="form-control" id="fournProduits" rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="appToast" class="toast align-items-center border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage">Opération réussie.</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- App JS -->
+<script src="js/app.js"></script>
+</body>
+</html>

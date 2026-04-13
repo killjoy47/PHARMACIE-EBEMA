@@ -1,0 +1,178 @@
+/* ============================================================
+   PHARMACIE EBEMA — Custom Stylesheet
+   ============================================================ */
+
+:root {
+  --sidebar-width: 240px;
+  --topbar-height: 56px;
+  --sidebar-bg: #1a2035;
+  --sidebar-text: #c8cfe4;
+  --sidebar-hover: #2a3150;
+  --sidebar-active: #0d6efd;
+  --accent: #0d6efd;
+}
+
+/* ----- Reset / Base ----- */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6fb;
+  color: #212529;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+.sidebar-brand {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-nav .nav-link {
+  color: var(--sidebar-text);
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  margin: 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.93rem;
+  transition: background 0.15s, color 0.15s;
+  text-decoration: none;
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 1.1rem;
+  width: 22px;
+  text-align: center;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.sidebar-nav .nav-link.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.25s ease;
+  min-height: 100vh;
+}
+
+.main-content.expanded {
+  margin-left: 0;
+}
+
+/* ----- Topbar ----- */
+.topbar {
+  height: var(--topbar-height);
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+/* ----- Page sections ----- */
+.page-section {
+  flex: 1;
+}
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+.kpi-card {
+  transition: box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,.1);
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #6c757d;
+}
+
+/* ============================================================
+   BADGES / STATUS
+   ============================================================ */
+.badge-ok    { background-color: #198754 !important; color: #fff; }
+.badge-low   { background-color: #ffc107 !important; color: #212529; }
+.badge-empty { background-color: #dc3545 !important; color: #fff; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#appToast {
+  min-width: 280px;
+}
+#appToast.toast-success { background: #198754; color: #fff; }
+#appToast.toast-error   { background: #dc3545; color: #fff; }
+#appToast.toast-info    { background: #0d6efd; color: #fff; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+  }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  .sidebar, .topbar, button, .btn, .modal { display: none !important; }
+  .main-content { margin-left: 0 !important; }
+  .page-section { display: block !important; }
+}
