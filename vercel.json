@@ -1,18 +1,10 @@
-
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/public/index.html"
-    }
-  ],
-  "env": {
-    "SUPABASE_URL": "https://nlznhqhctfudsyncspaf.supabase.co",
-    "SUPABASE_KEY": "sb_publishable_nE53cew4TVs_1UtXAY3Dqg_B4MIars3"
-  }
+    "version": 2,
+    "rewrites": [
+          { "source": "/api/(.*)", "destination": "/api/index.js" },
+          { "source": "/sw.js", "destination": "/public/sw.js" },
+          { "source": "/manifest.json", "destination": "/public/manifest.json" },
+          { "source": "/icon-(.*).png", "destination": "/public/icon-$1.png" },
+          { "source": "/(.*)", "destination": "/public/index.html" }
+    ]
 }
