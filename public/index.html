@@ -54,7 +54,6 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .swrap{position:relative}
 .sinput{width:100%;padding:14px 16px 14px 16px;background:var(--w);border:1.5px solid var(--g2);border-radius:var(--r);font-family:var(--fb);font-size:15px;outline:none;transition:border .2s;box-shadow:var(--sh)}
 .sinput:focus{border-color:var(--b4)}
-.sico{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--g4);font-size:17px;pointer-events:none}
 .sugs{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--w);border:1px solid var(--g2);border-radius:var(--r);box-shadow:var(--shl);z-index:200;max-height:320px;overflow-y:auto;display:none}
 .sug{padding:13px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--g1);transition:background .15s}
 .sug:last-child{border-bottom:none}
@@ -67,10 +66,6 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .sg{background:var(--gl);color:#065f46}
 .sy{background:var(--yl);color:#92400e}
 .sr{background:var(--rl);color:#991b1b}
-.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dg{background:var(--green)}
-.dy{background:var(--yellow)}
-.dr{background:var(--red)}
 .ccard{background:var(--w);border-radius:var(--r);border:1px solid var(--g2);box-shadow:var(--sh);overflow:hidden}
 .chead{padding:14px 16px;border-bottom:1px solid var(--g1);display:flex;align-items:center;justify-content:space-between}
 .ctitle{font-weight:600;font-size:15px;color:var(--g8);display:flex;align-items:center;gap:8px}
@@ -100,9 +95,7 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .mdisp{background:var(--gl);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
 .mdisp.err{background:var(--rl)}
 .mlb{font-size:13px;color:#065f46;font-weight:500}
-.mdisp.err .mlb{color:#991b1b}
 .mval{font-size:18px;font-weight:700;color:#065f46}
-.mdisp.err .mval{color:#991b1b}
 .bval{width:100%;margin-top:14px;padding:18px;background:var(--b5);border:none;border-radius:var(--r);color:var(--w);font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .bval:hover{background:var(--b4);transform:translateY(-1px)}
 .bval:disabled{background:var(--g3);cursor:not-allowed;transform:none}
@@ -117,14 +110,10 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .sclb{font-size:11px;font-weight:600;color:var(--g4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .scv{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--b9)}
 .scsb{font-size:12px;color:var(--g5);margin-top:3px}
-.sc.ared .scv{color:var(--red)}
-.sc.ayel .scv{color:var(--yellow)}
+.acontent .sc.ared .scv{color:var(--red)}
+.acontent .sc.ayel .scv{color:var(--yellow)}
 .stitle{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--b9);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .alist{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-.aitem{background:var(--w);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--g2);box-shadow:var(--sh)}
-.aitem.red{border-left:3px solid var(--red)}
-.aitem.yel{border-left:3px solid var(--yellow)}
-.aname{font-size:13px;font-weight:500;flex:1}
 .plist{display:flex;flex-direction:column;gap:10px}
 .pchd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
 .pn{font-size:15px;font-weight:600;color:var(--g8)}
@@ -191,7 +180,6 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .tbi.active{background:var(--b5);color:var(--w)}
 .fab{position:fixed;bottom:82px;right:20px;width:52px;height:52px;background:var(--b5);border:none;border-radius:16px;color:var(--w);font-size:22px;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,.4);z-index:99;display:none;align-items:center;justify-content:center;transition:all .2s}
 .fab.show{display:flex}
-.fab:hover{background:var(--b4);transform:translateY(-2px)}
 .toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--g8);color:var(--w);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:3000;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .fbar{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
@@ -207,7 +195,6 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 </style>
 </head>
 <body>
-
 <div class="toast" id="toast"></div>
 
 <!-- ═══ LOGIN ═══ -->
@@ -297,9 +284,7 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
       <button class="bico" onclick="logout()"><i class="fas fa-sign-out-alt"></i></button>
     </div>
   </div>
-
   <div class="acontent">
-    <!-- DASHBOARD -->
     <div class="psec active" id="pageDashboard">
       <div class="sgrid">
         <div class="sc"><div class="sclb">CA du jour</div><div class="scv" id="dCA">0</div><div class="scsb">FCFA</div></div>
@@ -310,21 +295,14 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
       <div class="stitle"><i class="fas fa-exclamation-triangle" style="color:var(--red)"></i> Ruptures & alertes</div>
       <div class="alist" id="alist"><div style="font-size:13px;color:var(--g4);padding:8px 0">✅ Aucune alerte</div></div>
     </div>
-
-    <!-- PRODUCTS -->
     <div class="psec" id="pageProducts">
       <div class="tbbar">
         <button class="tbi active" onclick="setpt('list',this)">📦 Catalogue</button>
         <button class="tbi" onclick="setpt('search',this)">🔍 Recherche</button>
       </div>
       <div id="ptList"><div class="plist" id="plist"></div></div>
-      <div id="ptSearch" class="hidden">
-        <input class="sinput" type="text" placeholder="Nom du médicament..." oninput="srchAdmin(this.value)" style="margin-bottom:14px">
-        <div class="plist" id="srchList"></div>
-      </div>
+      <div id="ptSearch" class="hidden"><input class="sinput" type="text" placeholder="Nom du médicament..." oninput="srchAdmin(this.value)" style="margin-bottom:14px"><div class="plist" id="srchList"></div></div>
     </div>
-
-    <!-- HISTORY -->
     <div class="psec" id="pageHistory">
       <div class="sgrid" style="margin-bottom:14px">
         <div class="sc"><div class="sclb">CA total</div><div class="scv" id="hCA" style="font-size:18px">0</div><div class="scsb">FCFA</div></div>
@@ -338,45 +316,24 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
       </div>
       <div class="hlist" id="hlist"></div>
     </div>
-
-    <!-- STATS -->
     <div class="psec" id="pageStats">
       <div class="stitle"><i class="fas fa-chart-bar" style="color:var(--b5)"></i> Ventes — 7 derniers jours</div>
       <div class="ccard" style="padding:16px;margin-bottom:16px"><div class="cbars" id="cbars"></div></div>
       <div class="stitle"><i class="fas fa-trophy" style="color:var(--yellow)"></i> Top médicaments</div>
       <div id="tprod"></div>
     </div>
-
-    <!-- LOGS -->
     <div class="psec" id="pageLogs">
       <div style="font-size:12px;color:var(--g4);margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-lock"></i> Journal serveur (Supabase)</div>
       <div class="llist" id="llist"></div>
     </div>
-
-    <!-- SETTINGS -->
     <div class="psec" id="pageSettings">
-      <div class="ssec">
-        <div class="sstit">Pharmacie</div>
-        <div class="sitem" onclick="openM('mPhName')"><span class="silab">Nom de la pharmacie</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div>
-      </div>
-      <div class="ssec">
-        <div class="sstit">Sécurité (mot de passe maître requis)</div>
-        <div class="sitem" onclick="openM('mChPwd','admin')"><span class="silab">Changer mot de passe Admin</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div>
-        <div class="sitem" onclick="openM('mChPwd','vendor')"><span class="silab">Changer mot de passe Vendeur</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div>
-      </div>
-      <div class="ssec">
-        <div class="sstit">Système</div>
-        <div class="sitem" style="cursor:default"><span class="silab">Version</span><span style="font-size:13px;color:var(--g4)">PharmaGest Cloud API</span></div>
-        <div class="sitem" style="cursor:default"><span class="silab">Produits</span><span style="font-size:13px;color:var(--g4)" id="sPCnt">—</span></div>
-      </div>
-      <div style="margin-top:20px">
-        <button class="bsec" style="width:100%;margin-top:0" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button>
-      </div>
+      <div class="ssec"><div class="sstit">Pharmacie</div><div class="sitem" onclick="openM('mPhName')"><span class="silab">Nom de la pharmacie</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div></div>
+      <div class="ssec"><div class="sstit">Sécurité</div><div class="sitem" onclick="openM('mChPwd','admin')"><span class="silab">Changer mot de passe Admin</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div><div class="sitem" onclick="openM('mChPwd','vendor')"><span class="silab">Changer mot de passe Vendeur</span><i class="fas fa-chevron-right" style="color:var(--g4)"></i></div></div>
+      <div class="ssec"><div class="sstit">Système</div><div class="sitem" style="cursor:default"><span class="silab">Version</span><span style="font-size:13px;color:var(--g4)">PharmaGest Cloud PWA</span></div><div class="sitem" style="cursor:default"><span class="silab">Produits</span><span style="font-size:13px;color:var(--g4)" id="sPCnt">—</span></div></div>
+      <div style="margin-top:20px"><button class="bsec" style="width:100%;margin-top:0" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Se déconnecter</button></div>
     </div>
   </div>
-
   <button class="fab" id="fab" onclick="openAddModal()"><i class="fas fa-plus"></i></button>
-
   <nav class="anav">
     <button class="nitem active" onclick="anav('Dashboard',this)"><i class="fas fa-th-large"></i>Tableau</button>
     <button class="nitem" onclick="anav('Products',this)"><i class="fas fa-pills"></i>Produits</button>
@@ -388,319 +345,263 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 </div>
 
 <!-- ═══ MODALS ═══ -->
-<div class="moverlay" id="mProduct">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle" id="mProductTitle">➕ Ajouter un médicament</div>
-    <input type="hidden" id="epid">
-    <div class="fg"><label class="flb">Nom du médicament *</label><input class="fi" type="text" id="fn" placeholder="Ex: Paracétamol 500mg"></div>
-    <div class="frow">
-      <div class="fg"><label class="flb">Prix vente (FCFA) *</label><input class="fi" type="number" id="fps" placeholder="0"></div>
-      <div class="fg"><label class="flb">Prix achat (FCFA)</label><input class="fi" type="number" id="fpb" placeholder="0"></div>
-    </div>
-    <div class="frow">
-      <div class="fg"><label class="flb">Quantité en stock *</label><input class="fi" type="number" id="fq" placeholder="0"></div>
-      <div class="fg"><label class="flb">Seuil minimum *</label><input class="fi" type="number" id="fm" placeholder="10"></div>
-    </div>
-    <button class="bpri" onclick="saveProduct()">Enregistrer</button>
-    <button class="bsec" onclick="closeM('mProduct')">Annuler</button>
-  </div>
-</div>
-
-<div class="moverlay" id="mRestock">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle">📦 Réapprovisionner</div>
-    <input type="hidden" id="rpid">
-    <div class="fg"><label class="flb">Médicament</label><div style="padding:12px 14px;background:var(--g0);border-radius:10px;font-weight:600" id="rpname">—</div></div>
-    <div class="fg"><label class="flb">Quantité à ajouter *</label><input class="fi" type="number" id="rq" placeholder="0"></div>
-    <button class="bpri" onclick="doRestock()">Confirmer</button>
-    <button class="bsec" onclick="closeM('mRestock')">Annuler</button>
-  </div>
-</div>
-
-<div class="moverlay" id="mAdjust">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle">✏️ Ajuster le stock</div>
-    <input type="hidden" id="ajpid">
-    <div class="fg"><label class="flb">Médicament</label><div style="padding:12px 14px;background:var(--g0);border-radius:10px;font-weight:600" id="ajpname">—</div></div>
-    <div class="fg"><label class="flb">Nouveau stock *</label><input class="fi" type="number" id="ajq" placeholder="0"></div>
-    <div class="fg"><label class="flb">Raison de l'ajustement *</label><input class="fi" type="text" id="ajr" placeholder="Ex: Inventaire mensuel"></div>
-    <button class="bpri" onclick="doAdjust()">Confirmer</button>
-    <button class="bsec" onclick="closeM('mAdjust')">Annuler</button>
-  </div>
-</div>
-
-<div class="moverlay" id="mChPwd">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle" id="mChPwdTitle">🔑 Changer le mot de passe</div>
-    <input type="hidden" id="pwdtgt">
-    <div class="fg"><label class="flb">Mot de passe MAÎTRE (vérification)</label><input class="fi" type="password" id="mpv" placeholder="Mot de passe maître"></div>
-    <div class="fg"><label class="flb">Nouveau mot de passe</label><input class="fi" type="password" id="np" placeholder="Nouveau mot de passe"></div>
-    <div class="fg"><label class="flb">Confirmer</label><input class="fi" type="password" id="cnp" placeholder="Confirmer le mot de passe"></div>
-    <div class="lerr" id="pwerr" style="display:none;margin-bottom:12px">Erreur</div>
-    <button class="bpri" onclick="doChPwd()">Modifier</button>
-    <button class="bsec" onclick="closeM('mChPwd')">Annuler</button>
-  </div>
-</div>
-
-<div class="moverlay" id="mPhName">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle">🏥 Nom de la pharmacie</div>
-    <div class="fg"><label class="flb">Nom affiché</label><input class="fi" type="text" id="fphn" placeholder="Ex: Pharmacie Saint-Michel"></div>
-    <button class="bpri" onclick="savePhName()">Enregistrer</button>
-    <button class="bsec" onclick="closeM('mPhName')">Annuler</button>
-  </div>
-</div>
-
-<div class="moverlay" id="mDetail">
-  <div class="modal">
-    <div class="mhdl"></div>
-    <div class="mtitle" id="mDetailTitle">Fiche produit</div>
-    <div id="mDetailContent"></div>
-    <button class="bsec" onclick="closeM('mDetail')">Fermer</button>
-  </div>
-</div>
-
-<div class="soverlay" id="sov">
-  <div class="scard">
-    <div class="sico-success">✅</div>
-    <div class="stit">Vente validée !</div>
-    <div class="sdet" id="sdet"></div>
-    <div class="smon" id="smon"></div>
-    <button class="bpri" style="margin-top:16px" onclick="closeSuccess()">Nouvelle vente</button>
-  </div>
-</div>
+<div class="moverlay" id="mProduct"><div class="modal"><div class="mhdl"></div><div class="mtitle" id="mProductTitle">➕ Ajouter un médicament</div><input type="hidden" id="epid"><div class="fg"><label class="flb">Nom du médicament *</label><input class="fi" type="text" id="fn" placeholder="Ex: Paracétamol 500mg"></div><div class="frow"><div class="fg"><label class="flb">Prix vente (FCFA) *</label><input class="fi" type="number" id="fps" placeholder="0"></div><div class="fg"><label class="flb">Prix achat (FCFA)</label><input class="fi" type="number" id="fpb" placeholder="0"></div></div><div class="frow"><div class="fg"><label class="flb">Quantité en stock *</label><input class="fi" type="number" id="fq" placeholder="0"></div><div class="fg"><label class="flb">Seuil minimum *</label><input class="fi" type="number" id="fm" placeholder="10"></div></div><button class="bpri" onclick="saveProduct()">Enregistrer</button><button class="bsec" onclick="closeM('mProduct')">Annuler</button></div></div>
+<div class="moverlay" id="mRestock"><div class="modal"><div class="mhdl"></div><div class="mtitle">📦 Réapprovisionner</div><input type="hidden" id="rpid"><div class="fg"><label class="flb">Médicament</label><div style="padding:12px 14px;background:var(--g0);border-radius:10px;font-weight:600" id="rpname">—</div></div><div class="fg"><label class="flb">Quantité à ajouter *</label><input class="fi" type="number" id="rq" placeholder="0"></div><button class="bpri" onclick="doRestock()">Confirmer</button><button class="bsec" onclick="closeM('mRestock')">Annuler</button></div></div>
+<div class="moverlay" id="mAdjust"><div class="modal"><div class="mhdl"></div><div class="mtitle">✏️ Ajuster le stock</div><input type="hidden" id="ajpid"><div class="fg"><label class="flb">Médicament</label><div style="padding:12px 14px;background:var(--g0);border-radius:10px;font-weight:600" id="ajpname">—</div></div><div class="fg"><label class="flb">Nouveau stock *</label><input class="fi" type="number" id="ajq" placeholder="0"></div><div class="fg"><label class="flb">Raison de l'ajustement *</label><input class="fi" type="text" id="ajr" placeholder="Ex: Inventaire mensuel"></div><button class="bpri" onclick="doAdjust()">Confirmer</button><button class="bsec" onclick="closeM('mAdjust')">Annuler</button></div></div>
+<div class="moverlay" id="mChPwd"><div class="modal"><div class="mhdl"></div><div class="mtitle" id="mChPwdTitle">🔑 Changer le mot de passe</div><input type="hidden" id="pwdtgt"><div class="fg"><label class="flb">Mot de passe MAÎTRE (vérification)</label><input class="fi" type="password" id="mpv" placeholder="Mot de passe maître"></div><div class="fg"><label class="flb">Nouveau mot de passe</label><input class="fi" type="password" id="np" placeholder="Nouveau mot de passe"></div><div class="fg"><label class="flb">Confirmer</label><input class="fi" type="password" id="cnp" placeholder="Confirmer le mot de passe"></div><div class="lerr" id="pwerr" style="display:none;margin-bottom:12px">Erreur</div><button class="bpri" onclick="doChPwd()">Modifier</button><button class="bsec" onclick="closeM('mChPwd')">Annuler</button></div></div>
+<div class="moverlay" id="mPhName"><div class="modal"><div class="mhdl"></div><div class="mtitle">🏥 Nom de la pharmacie</div><div class="fg"><label class="flb">Nom affiché</label><input class="fi" type="text" id="fphn" placeholder="Ex: Pharmacie Saint-Michel"></div><button class="bpri" onclick="savePhName()">Enregistrer</button><button class="bsec" onclick="closeM('mPhName')">Annuler</button></div></div>
+<div class="moverlay" id="mDetail"><div class="modal"><div class="mhdl"></div><div class="mtitle" id="mDetailTitle">📋 Fiche produit</div><div id="mDetailContent"></div><button class="bsec" onclick="closeM('mDetail')">Fermer</button></div></div>
+<div class="soverlay" id="sov"><div class="scard"><div class="sico-success">✅</div><div class="stit">Vente validée !</div><div class="sdet" id="sdet"></div><div class="smon" id="smon"></div><button class="bpri" style="margin-top:16px" onclick="closeSuccess()">Nouvelle vente</button></div></div>
 
 <script>
-// ═══ CONNEXION BACKEND ═══
 const API_URL = '/api';
-
 const API = {
-    async get(path) {
-        const r = await fetch(API_URL + path);
-        return r.json();
-    },
-    async post(path, data) {
-        const r = await fetch(API_URL + path, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-        return r.json();
-    },
-    async put(path, data) {
-        const r = await fetch(API_URL + path, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-        return r.json();
-    },
-    async delete(path) {
-        const r = await fetch(API_URL + path, { method: 'DELETE' });
-        return r.json();
-    }
+    async get(path) { const r = await fetch(API_URL+path); return r.json(); },
+    async post(path, data) { const r = await fetch(API_URL+path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); return r.json(); },
+    async put(path, data) { const r = await fetch(API_URL+path, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)}); return r.json(); },
+    async delete(path) { const r = await fetch(API_URL+path, {method:'DELETE'}); return r.json(); }
 };
 
-let STATE = { products: [], sales: [], logs: [], phn: 'PharmaGest' };
+let STATE = { products:[], sales:[], logs:[], phn:'PharmaGest' };
 let role = null, cart = [], hf = 'today', pwdtgt = '';
 
 const f = n => Number(n).toLocaleString('fr-FR') + ' FCFA';
 const td = () => new Date().toISOString().split('T')[0];
 const now = () => new Date().toLocaleString('fr-FR');
-
 function ss(p) { return p.qty <= 0 || p.qty <= p.min ? 'r' : p.qty <= p.min * 2 ? 'y' : 'g'; }
 
 async function addLog(a, c = 'blue') {
     if (navigator.onLine) {
-        try {
-            await API.post('/logs', { action: a, color: c, time: now() });
-            STATE.logs = await API.get('/logs');
-        } catch (e) { console.warn('Erreur addLog', e); }
-    } else {
-        STATE.logs.unshift({ action: a, color: c, time: now() });
-        if (STATE.logs.length > 50) STATE.logs.pop();
-    }
+        try { await API.post('/logs', { action: a, color: c, time: now() }); STATE.logs = await API.get('/logs'); } catch (e) {}
+    } else { STATE.logs.unshift({ action: a, color: c, time: now() }); if(STATE.logs.length>50) STATE.logs.pop(); }
 }
-
-function toast(m) {
-    const t = document.getElementById('toast');
-    t.textContent = m; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-}
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 
 async function refreshAll() {
     if (!navigator.onLine) {
-        toast('🔌 Mode hors-ligne : Données locales');
-        const tx = db.transaction('local_products', 'readonly');
-        const req = tx.objectStore('local_products').getAll();
-        req.onsuccess = () => {
-            if (req.result.length > 0) {
-                STATE.products = req.result;
-                if (role === 'admin') { refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs(); }
-                if (role === 'vendor') refreshVendor();
-            }
-        };
-        return;
+        const tx = db.transaction('local_products', 'readonly'); const req = tx.objectStore('local_products').getAll();
+        req.onsuccess = () => { if (req.result.length > 0) { STATE.products = req.result; if(role==='admin'){refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs();} if(role==='vendor') refreshVendor(); } }; return;
     }
-
     try {
-        STATE.products = await API.get('/products');
-        STATE.sales = await API.get('/sales');
-        STATE.logs = await API.get('/logs');
-        const settings = await API.get('/settings');
-        STATE.phn = settings.phn || 'PharmaGest';
-        
-        const tx = db.transaction('local_products', 'readwrite');
-        const store = tx.objectStore('local_products');
-        store.clear();
-        STATE.products.forEach(p => store.add(p));
-
-        document.getElementById('aName').textContent = STATE.phn;
-        document.getElementById('vName').textContent = STATE.phn;
-        
-        if (role === 'admin') { refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs(); }
-        if (role === 'vendor') refreshVendor();
-    } catch (e) { console.error('Erreur sync', e); }
+        STATE.products = await API.get('/products'); STATE.sales = await API.get('/sales'); STATE.logs = await API.get('/logs');
+        const settings = await API.get('/settings'); STATE.phn = settings.phn || 'PharmaGest';
+        const tx = db.transaction('local_products', 'readwrite'); const store = tx.objectStore('local_products'); store.clear(); STATE.products.forEach(p => store.add(p));
+        document.getElementById('aName').textContent = STATE.phn; document.getElementById('vName').textContent = STATE.phn;
+        if(role==='admin'){refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs();} if(role==='vendor') refreshVendor();
+    } catch(e) {}
 }
 
+// ═══ LOGIN ═══
 let selRole = 'admin';
 function setRole(r) {
-    selRole = r;
-    document.querySelectorAll('.rtab').forEach((t, i) => t.classList.toggle('active', ['admin', 'vendor', 'master'][i] === r));
+    selRole = r; document.querySelectorAll('.rtab').forEach((t, i) => t.classList.toggle('active', ['admin', 'vendor', 'master'][i] === r));
     const h = { admin: 'Accès complet pharmacien', vendor: 'Accès vente uniquement', master: 'Réinitialisation des mots de passe' };
-    document.getElementById('lhint').textContent = h[r] || '';
-    document.getElementById('lpwd').value = '';
-    document.getElementById('lerr').style.display = 'none';
+    document.getElementById('lhint').textContent = h[r] || ''; document.getElementById('lpwd').value = ''; document.getElementById('lerr').style.display = 'none';
 }
-
 async function doLogin() {
-    const pwd = document.getElementById('lpwd').value;
-    const btn = document.getElementById('btnLogin');
-    btn.textContent = "Connexion..."; btn.disabled = true;
-
+    const pwd = document.getElementById('lpwd').value, btn = document.getElementById('btnLogin'), err = document.getElementById('lerr');
+    err.style.display = 'none'; btn.textContent = "Connexion..."; btn.disabled = true;
     try {
         const res = await API.post('/auth', { role: selRole, password: pwd });
         if (res.success) {
-            role = selRole; await refreshAll();
+            role = selRole; localStorage.setItem('pharma_role', role); await refreshAll();
             await addLog(`Connexion ${role}`, role === 'admin' ? 'blue' : 'green');
             showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen');
-        } else { throw new Error(res.error); }
-    } catch (e) {
-        document.getElementById('lerr').textContent = e.message;
-        document.getElementById('lerr').style.display = 'block';
-    } finally {
-        btn.textContent = "Se connecter"; btn.disabled = false;
-    }
+        } else throw new Error(res.error || 'Erreur');
+    } catch (e) { err.textContent = e.message; err.style.display = 'block'; } finally { btn.textContent = "Se connecter"; btn.disabled = false; }
 }
+function logout() { role = null; cart = []; localStorage.removeItem('pharma_role'); showScr('loginScreen'); document.getElementById('lpwd').value = ''; }
+function showScr(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
-function logout() { role = null; cart = []; showScr('loginScreen'); }
-function showScr(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function openM(id, extra) {
-    if (id === 'mChPwd') pwdtgt = extra;
-    if (id === 'mPhName') document.getElementById('fphn').value = STATE.phn;
-    document.getElementById(id).classList.add('active');
-}
-function closeM(id) { document.getElementById(id).classList.remove('active'); }
-
+// ═══ VENDOR ═══
+function refreshVendor() { renderCart(); }
 function onSearch() {
-    const q = document.getElementById('srch').value.trim().toLowerCase();
-    const sg = document.getElementById('sugs');
+    const q = document.getElementById('srch').value.trim().toLowerCase(), sg = document.getElementById('sugs');
     if (q.length < 1) { sg.style.display = 'none'; return; }
     const F = STATE.products.filter(p => p.name.toLowerCase().includes(q)).slice(0, 8);
     if (!F.length) { sg.style.display = 'none'; return; }
     sg.innerHTML = F.map(p => {
-        const s = ss(p); const bc = { r: 'sr', y: 'sy', g: 'sg' }[s];
-        return `<div class="sug" onclick="addToCart(${p.id})">
-       <div class="sug-l"><div class="sug-n">${p.name}</div><div class="sug-p">${f(p.ps)} / unité</div></div>
-       <div class="sug-r"><span class="sbadge ${bc}">${p.qty} en stock</span></div>
-     </div>`;
+        const s = ss(p), bc = { r: 'sr', y: 'sy', g: 'sg' }[s];
+        return `<div class="sug" onclick="addToCart(${p.id})"><div class="sug-l"><div class="sug-n">${p.name}</div><div class="sug-p">${f(p.ps)}</div></div><div class="sug-r"><span class="sbadge ${bc}">${p.qty} en stock</span></div></div>`;
     }).join('');
     sg.style.display = 'block';
 }
-
 function addToCart(id) {
-    const p = STATE.products.find(x => x.id === id);
-    if (!p || p.qty <= 0) return toast('❌ Stock épuisé !');
-    const ex = cart.find(x => x.id === id);
-    if (ex) { if (ex.qty >= p.qty) return toast('⚠️ Stock insuffisant'); ex.qty++; }
+    const p = STATE.products.find(x => x.id === id); if (!p || p.qty <= 0) return toast('❌ Stock épuisé !');
+    const ex = cart.find(x => x.id === id); if (ex) { if (ex.qty >= p.qty) return toast('⚠️ Stock insuffisant'); ex.qty++; }
     else cart.push({ id: p.id, name: p.name, ps: p.ps, qty: 1, max: p.qty });
-    document.getElementById('srch').value = ''; document.getElementById('sugs').style.display = 'none';
-    renderCart();
+    document.getElementById('srch').value = ''; document.getElementById('sugs').style.display = 'none'; renderCart();
 }
-
 function removeFromCart(id) { cart = cart.filter(x => x.id !== id); renderCart(); }
 function chgQty(id, d) { const i = cart.find(x => x.id === id); if (i) i.qty = Math.max(1, Math.min(i.qty + d, i.max)); renderCart(); }
-function setQty(id, val) {
-    const i = cart.find(x => x.id === id);
-    if (i) { i.qty = Math.max(1, Math.min(parseInt(val) || 1, i.max)); renderCart(); }
-}
+function setQty(id, val) { const i = cart.find(x => x.id === id); if (i) { i.qty = Math.max(1, Math.min(parseInt(val) || 1, i.max)); renderCart(); } }
 function clearCart() { cart = []; renderCart(); }
 function total() { return cart.reduce((s, i) => s + i.ps * i.qty, 0); }
-
 function renderCart() {
-    const el = document.getElementById('citems'), cnt = document.getElementById('ccnt'), pp = document.getElementById('ppanel');
+    const el = document.getElementById('citems'), cnt = document.getElementById('ccnt'), pp = document.getElementById('ppanel'); el.innerHTML = '';
     cnt.textContent = cart.reduce((s, i) => s + i.qty, 0);
-    if (!cart.length) {
-        el.innerHTML = '<div class="cempty">Panier vide</div>';
-        pp.style.display = 'none'; return;
-    }
-    el.innerHTML = cart.map(i => `<div class="citem">
-     <div class="cin"><div class="cname">${i.name}</div><div class="cprice">${f(i.ps)}</div></div>
-     <div class="qctrl"><button class="qbtn" onclick="chgQty(${i.id},-1)">−</button><input type="number" class="qinput" value="${i.qty}" onchange="setQty(${i.id}, this.value)"><button class="qbtn" onclick="chgQty(${i.id},1)">+</button></div>
-     <div class="cttl">${f(i.ps * i.qty)}</div><button class="brm" onclick="removeFromCart(${i.id})">×</button></div>`).join('');
-    pp.style.display = 'block';
-    document.getElementById('ttl').textContent = f(total());
+    if (!cart.length) { el.innerHTML = '<div class="cempty">Panier vide</div>'; pp.style.display = 'none'; return; }
+    el.innerHTML = cart.map(i => `<div class="citem"><div class="cin"><div class="cname">${i.name}</div><div class="cprice">${f(i.ps)}</div></div><div class="qctrl"><button class="qbtn" onclick="chgQty(${i.id},-1)">−</button><input type="number" class="qinput" value="${i.qty}" onchange="setQty(${i.id}, this.value)"><button class="qbtn" onclick="chgQty(${i.id},1)">+</button></div><div class="cttl">${f(i.ps * i.qty)}</div><button class="brm" onclick="removeFromCart(${i.id})">×</button></div>`).join('');
+    pp.style.display = 'block'; document.getElementById('ttl').textContent = f(total());
 }
-
-function calcM() {
-    const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0, m = v - t;
-    document.getElementById('mval').textContent = m >= 0 ? f(m) : '—';
-}
-
+function calcM() { const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0, m = v - t; document.getElementById('mval').textContent = m >= 0 ? f(m) : '—'; }
 async function validateSale() {
-    const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0;
-    if (v < t) return toast('❌ Montant insuffisant');
-    
-    const saleData = { items: cart, total: t, versee: v, monnaie: v-t, date: td(), dt: now(), vendor: role };
+    const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0; if (v < t) return toast('❌ Montant insuffisant');
+    const sData = { items: cart, total: t, versee: v, monnaie: v-t, date: td(), dt: now() };
     try {
-        if (navigator.onLine) await API.post('/sales', saleData);
-        else await saveOfflineSale(saleData);
-        
+        if (navigator.onLine) await API.post('/sales', sData); else await saveOfflineSale(sData);
         document.getElementById('sdet').textContent = cart.map(i => `${i.name} × ${i.qty}`).join(', ');
-        document.getElementById('smon').textContent = `Rendu: ${f(v-t)}`;
-        document.getElementById('sov').classList.add('active');
+        document.getElementById('smon').textContent = `Rendu: ${f(v-t)}`; document.getElementById('sov').classList.add('active');
         cart = []; await refreshAll();
     } catch (e) { toast('❌ Erreur'); }
 }
 function closeSuccess() { document.getElementById('sov').classList.remove('active'); renderCart(); }
 
-// ... (Logique Admin inchangée mais optimisée pour le Cloud) ...
-</script>
-<script>
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
-let db;
-const req = indexedDB.open('pharmaDB', 1);
-req.onupgradeneeded = e => {
-    db = e.target.result;
-    db.createObjectStore('pending_sales', { keyPath: 'id', autoIncrement: true });
-    db.createObjectStore('local_products', { keyPath: 'id' });
-};
-req.onsuccess = e => { db = e.target.result; syncOfflineData(); };
-
-async function saveOfflineSale(s) { 
-    const tx = db.transaction('pending_sales', 'readwrite');
-    tx.objectStore('pending_sales').add(s);
+// ═══ ADMIN ═══
+function anav(p, b) {
+    document.querySelectorAll('.nitem').forEach(i => i.classList.remove('active')); b.classList.add('active');
+    document.querySelectorAll('.psec').forEach(s => s.classList.remove('active')); document.getElementById('page' + p).classList.add('active');
+    document.getElementById('fab').className = p === 'Products' ? 'fab show' : 'fab';
 }
+function refreshDash() {
+    const dr = STATE.products.filter(p => p.qty <= 0), dy = STATE.products.filter(p => p.qty > 0 && p.qty <= p.min);
+    document.getElementById('dCA').textContent = STATE.sales.filter(s => s.date === td()).reduce((s, x) => s + x.total, 0).toLocaleString('fr-FR');
+    document.getElementById('dSales').textContent = STATE.sales.filter(s => s.date === td()).length;
+    document.getElementById('dRed').textContent = dr.length; document.getElementById('dYel').textContent = dy.length;
+    const el = document.getElementById('alist'); if (!dr.length && !dy.length) { el.innerHTML = '<div style="font-size:13px;color:var(--g4);padding:8px 0">✅ Aucune alerte</div>'; return; }
+    el.innerHTML = [...dr, ...dy].slice(0, 10).map(p => `<div class="aitem ${p.qty <= 0 ? 'red' : 'yel'}"><span class="sdot ${p.qty <= 0 ? 'dr' : 'dy'}"></span><span class="aname">${p.name}</span><span class="sbadge ${p.qty <= 0 ? 'sr' : 'sy'}">${p.qty} en stock</span></div>`).join('');
+}
+function renderProds() {
+    const el = document.getElementById('plist'); document.getElementById('sPCnt').textContent = STATE.products.length;
+    el.innerHTML = STATE.products.map(p => {
+        const s = ss(p), bc = { r: 'sr' , y: 'sy', g: 'sg' }[s];
+        return `<div class="sc" style="margin-bottom:12px"><div class="pchd"><div class="pn">${p.name}</div><div class="pacts"><button class="bsm bedit" onclick="editProd(${p.id})">Modifier</button><button class="bsm bdel" onclick="delProd(${p.id})">Suppr</button></div></div><div class="pig2"><div class="pi"><div class="pil">Prix vente</div><div class="piv">${f(p.ps)}</div></div><div class="pi"><div class="pil">Stock</div><div class="piv"><span class="sbadge ${bc}">${p.qty} un.</span></div></div><div class="pi"><div class="pil">Actions</div><div style="display:flex;gap:4px"><button class="bsm bsuc" onclick="openRestock(${p.id})" title="Réappro"><i class="fas fa-plus"></i></button><button class="bsm bedit" onclick="openAdjust(${p.id})" title="Ajuster"><i class="fas fa-sliders-h"></i></button><button class="bsm bdel" onclick="showDetail(${p.id})" title="Détails" style="background:var(--b0);color:var(--b5)"><i class="fas fa-eye"></i></button></div></div></div></div>`;
+    }).join('');
+}
+function srchAdmin(q) {
+    const el = document.getElementById('srchList'), Q = q.trim().toLowerCase(); if (!Q) { el.innerHTML = ''; return; }
+    const F = STATE.products.filter(p => p.name.toLowerCase().includes(Q));
+    el.innerHTML = F.map(p => `<div class="sc" style="margin-bottom:12px"><div class="pchd"><div class="pn">${p.name}</div><div class="pacts"><button class="bsm bedit" onclick="editProd(${p.id})">Modifier</button></div></div></div>`).join('');
+}
+function setpt(t, b) {
+    document.querySelectorAll('.tbi').forEach(i => i.classList.remove('active')); b.classList.add('active');
+    document.getElementById('ptList').className = t === 'list' ? '' : 'hidden'; document.getElementById('ptSearch').className = t === 'search' ? '' : 'hidden';
+}
+function openAddModal() {
+    document.getElementById('epid').value = ''; document.getElementById('mProductTitle').textContent = '➕ Ajouter un médicament';
+    ['fn', 'fps', 'fpb', 'fq', 'fm'].forEach(id => document.getElementById(id).value = ''); openM('mProduct');
+}
+function editProd(id) {
+    const p = STATE.products.find(x => x.id === id); if (!p) return;
+    document.getElementById('epid').value = id; document.getElementById('mProductTitle').textContent = '✏️ Modifier ' + p.name;
+    document.getElementById('fn').value = p.name; document.getElementById('fps').value = p.ps;
+    document.getElementById('fpb').value = p.pb || ''; document.getElementById('fq').value = p.qty; document.getElementById('fm').value = p.min;
+    openM('mProduct');
+}
+async function saveProduct() {
+    const name = document.getElementById('fn').value.trim(), ps = parseFloat(document.getElementById('fps').value) || 0;
+    const pb = parseFloat(document.getElementById('fpb').value) || 0, qty = parseInt(document.getElementById('fq').value) || 0, min = parseInt(document.getElementById('fm').value) || 5;
+    if (!name || !ps) { toast('⚠️ Nom et prix obligatoires'); return; }
+    const eid = document.getElementById('epid').value;
+    try {
+        if (eid) { await API.put('/products/' + eid, { name, ps, pb, qty, min }); await addLog('Produit modifié : ' + name, 'blue'); }
+        else { await API.post('/products', { name, ps, pb, qty, min }); await addLog('Nouveau produit : ' + name, 'green'); }
+        await refreshAll(); closeM('mProduct'); toast('✅ Enregistré sur le cloud');
+    } catch (e) { toast('❌ Erreur'); }
+}
+async function delProd(id) {
+    if (!confirm('Supprimer ce médicament ?')) return;
+    try { await API.delete('/products/' + id); await addLog('Produit supprimé ID: ' + id, 'red'); await refreshAll(); toast('🗑️ Supprimé du cloud'); } catch (e) {}
+}
+function openRestock(id) {
+    const p = STATE.products.find(x => x.id === id); if (!p) return;
+    document.getElementById('rpid').value = id; document.getElementById('rpname').textContent = p.name + ' (stock: ' + p.qty + ')'; document.getElementById('rq').value = ''; openM('mRestock');
+}
+async function doRestock() {
+    const id = parseInt(document.getElementById('rpid').value), q = parseInt(document.getElementById('rq').value) || 0;
+    if (q <= 0) { toast('⚠️ Quantité invalide'); return; }
+    const p = STATE.products.find(x => x.id === id);
+    try { await API.put('/products/' + id, { ...p, qty: p.qty + q }); await addLog(`Réappro ${p.name} : +${q}`, 'green'); await refreshAll(); closeM('mRestock'); toast(`✅ +${q} unités`); } catch (e) {}
+}
+function openAdjust(id) {
+    const p = STATE.products.find(x => x.id === id); if (!p) return;
+    document.getElementById('ajpid').value = id; document.getElementById('ajpname').textContent = p.name + ' (stock: ' + p.qty + ')';
+    document.getElementById('ajq').value = p.qty; document.getElementById('ajr').value = ''; openM('mAdjust');
+}
+async function doAdjust() {
+    const id = parseInt(document.getElementById('ajpid').value), q = parseInt(document.getElementById('ajq').value), r = document.getElementById('ajr').value.trim();
+    if (isNaN(q) || q < 0) { toast('⚠️ Quantité invalide'); return; } if (!r) { toast('⚠️ Raison obligatoire'); return; }
+    const p = STATE.products.find(x => x.id === id);
+    try { await API.put('/products/' + id, { ...p, qty: q }); await addLog(`Ajustement ${p.name} : ${p.qty}→${q} (${r})`, 'yellow'); await refreshAll(); closeM('mAdjust'); toast('✅ Stock ajusté'); } catch (e) {}
+}
+function showDetail(id) {
+    const p = STATE.products.find(x => x.id === id); if (!p) return;
+    const ps = STATE.sales.filter(s => s.items.some(i => i.id === id)), sold = ps.reduce((s, sale) => { const i = sale.items.find(i => i.id === id); return s + (i ? i.qty : 0); }, 0);
+    document.getElementById('mDetailTitle').textContent = '📋 ' + p.name;
+    document.getElementById('mDetailContent').innerHTML = `<div class="pig2" style="margin-bottom:14px"><div class="pi"><div class="pil">Stock actuel</div><div class="piv">${p.qty}</div></div><div class="pi"><div class="pil">Seuil min</div><div class="piv">${p.min}</div></div><div class="pi"><div class="pil">Total vendu</div><div class="piv">${sold}</div></div></div><div class="pi" style="margin-bottom:14px"><div class="pil">Marge estimée</div><div class="piv" style="color:var(--green)">${p.pb ? f(p.ps - p.pb) + ' / unité' : 'N/A'}</div></div><div style="font-size:13px;font-weight:600;color:var(--g6);margin-bottom:8px">Dernières ventes :</div>${ps.slice(0, 8).map(s => { const i = s.items.find(i => i.id === id); return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--g1);font-size:13px"><span style="color:var(--g5)">${s.dt}</span><span style="font-weight:600">× ${i ? i.qty : 0} • ${f(i ? i.qty * i.ps : 0)}</span></div>`; }).join('') || '<div style="color:var(--g4);text-align:center;padding:16px">Aucune vente</div>'}`;
+    openM('mDetail');
+}
+function fh(filter, btn) { hf = filter; document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active')); btn.classList.add('active'); renderHist(); }
+function renderHist() {
+    const n = new Date(); let F = STATE.sales;
+    if (hf === 'today') F = STATE.sales.filter(s => s.date === td()); else if (hf === 'week') { const w = new Date(n); w.setDate(w.getDate() - 7); F = STATE.sales.filter(s => new Date(s.date) >= w); } else if (hf === 'month') { const m = new Date(n); m.setDate(m.getDate() - 30); F = STATE.sales.filter(s => new Date(s.date) >= m); }
+    document.getElementById('hCA').textContent = F.reduce((s, x) => s + x.total, 0).toLocaleString('fr-FR'); document.getElementById('hCnt').textContent = F.length;
+    const el = document.getElementById('hlist'); if (!F.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucune vente</div>'; return; }
+    el.innerHTML = F.map(s => `<div class="hitem"><div class="hhd"><span class="hid">🧾 #${s.id}</span><span class="httl">${f(s.total)}</span></div><div class="hdt">${s.dt}</div><div class="hitms">${s.items.map(i => `${i.name} × ${i.qty}`).join(' • ')}</div></div>`).join('');
+}
+function renderStats() {
+    const days = []; for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); const ds = d.toISOString().split('T')[0], lb = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'][d.getDay()], t = STATE.sales.filter(s => s.date === ds).reduce((s, x) => s + x.total, 0); days.push({ lb, t }); }
+    const mx = Math.max(...days.map(d => d.t), 1);
+    document.getElementById('cbars').innerHTML = days.map(d => `<div class="cbw"><div class="cbv">${d.t > 0 ? (d.t / 1000).toFixed(0) + 'k' : ''}</div><div class="cb" style="height:${Math.max(4, (d.t / mx) * 100)}%" title="${f(d.t)}"></div><div class="cbl">${d.lb}</div></div>`).join('');
+    const qs = {}; STATE.sales.forEach(s => s.items.forEach(i => { qs[i.name] = (qs[i.name] || 0) + i.qty; }));
+    const top = Object.entries(qs).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    document.getElementById('tprod').innerHTML = top.length ? top.map(([n, q], i) => `<div class="tpi"><div class="trank">${i + 1}</div><div class="tpn">${n}</div><div class="tpq">${q} vendus</div></div>`).join('') : '<div style="text-align:center;padding:24px;color:var(--g4)">Aucune vente</div>';
+}
+function renderLogs() {
+    const el = document.getElementById('llist'); if (!STATE.logs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucune activité</div>'; return; }
+    const clr = { blue: 'var(--b4)', green: 'var(--green)', red: 'var(--red)', yellow: 'var(--yellow)', gray: 'var(--g3)' };
+    el.innerHTML = STATE.logs.map(l => `<div class="litem"><span class="ldot" style="background:${clr[l.color] || 'var(--g3)'}"></span><span class="ltm">${l.time.split(' ')[1] || l.time.substring(0, 8)}</span><span class="lac">${l.action}</span></div>`).join('');
+}
+async function savePhName() { const n = document.getElementById('fphn').value.trim(); if (!n) return; try { await API.post('/settings', { key: 'phn', value: n }); await addLog('Nom pharmacie mis à jour', 'blue'); await refreshAll(); closeM('mPhName'); toast('✅ Cloud mis à jour'); } catch (e) {} }
+async function doChPwd() {
+    const mp = document.getElementById('mpv').value, np = document.getElementById('np').value, cp = document.getElementById('cnp').value, err = document.getElementById('pwerr');
+    err.style.display = 'none'; if (!np || np.length < 4) { err.textContent = '❌ Minimum 4 caractères'; err.style.display = 'block'; return; } if (np !== cp) { err.textContent = '❌ Mots de passe différents'; err.style.display = 'block'; return; }
+    try { const res = await API.post('/auth/change', { masterPwd: mp, targetRole: pwdtgt, newPwd: np }); if (res.success) { await addLog('Mdp ' + pwdtgt + ' modifié', 'yellow'); closeM('mChPwd'); toast('✅ Modifié sur le cloud'); } else { err.textContent = '❌ ' + res.error; err.style.display = 'block'; } } catch (e) {}
+}
+
+// ═══ PWA & OFFLINE ═══
+let db;
+const request = indexedDB.open('pharmaDB', 1);
+request.onupgradeneeded = e => {
+    db = e.target.result;
+    if (!db.objectStoreNames.contains('pending_sales')) db.createObjectStore('pending_sales', { keyPath: 'id', autoIncrement: true });
+    if (!db.objectStoreNames.contains('local_products')) db.createObjectStore('local_products', { keyPath: 'id' });
+};
+request.onsuccess = e => { db = e.target.result; syncOfflineData(); };
+
+async function saveOfflineSale(s) { const tx = db.transaction('pending_sales', 'readwrite'); tx.objectStore('pending_sales').add(s); return tx.complete; }
+async function getOfflineSales() { const tx = db.transaction('pending_sales', 'readonly'); const store = tx.objectStore('pending_sales'); return new Promise(res => { const req = store.getAll(); req.onsuccess = () => res(req.result); }); }
+async function clearOfflineSales() { const tx = db.transaction('pending_sales', 'readwrite'); tx.objectStore('pending_sales').clear(); }
+
 async function syncOfflineData() {
     if (!navigator.onLine) return;
-    const tx = db.transaction('pending_sales', 'readwrite');
-    const store = tx.objectStore('pending_sales');
-    const sales = await new Promise(r => { store.getAll().onsuccess = e => r(e.target.result); });
-    for (const s of sales) await API.post('/sales', s);
-    store.clear(); refreshAll();
+    const sales = await getOfflineSales();
+    if (sales.length > 0) {
+        toast(`🔄 Synchronisation de ${sales.length} vente(s)...`);
+        for (const s of sales) { try { await API.post('/sales', s); } catch (e) {} }
+        await clearOfflineSales(); await refreshAll(); toast('✅ Synchronisation terminée !');
+    }
 }
-window.addEventListener('online', syncOfflineData);
+
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js'); }
+window.addEventListener('online', () => { document.getElementById('vsync').className = 'sync on'; document.getElementById('async').className = 'sync on'; syncOfflineData(); });
+window.addEventListener('offline', () => { document.getElementById('vsync').className = 'sync off'; document.getElementById('async').className = 'sync off'; toast('⚠️ Mode hors-ligne activé'); });
+
+// Session au démarrage
+window.addEventListener('load', async () => {
+    const savedRole = localStorage.getItem('pharma_role');
+    if (savedRole) { role = savedRole; await refreshAll(); showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen'); toast('🔓 Session restaurée'); }
+});
 </script>
 </body>
 </html>
