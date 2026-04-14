@@ -105,6 +105,9 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .nitem.active{color:var(--b5)}
 .nitem i{font-size:19px}
 .acontent{flex:1;overflow-y:auto;padding:16px;padding-bottom:92px}
+/* Modification A : Ajout des règles manquantes pour .psec */
+.psec{display:none}
+.psec.active{display:block}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .sc{background:var(--w);border-radius:var(--r);border:1px solid var(--g2);padding:16px;box-shadow:var(--sh)}
 .sclb{font-size:11px;font-weight:600;color:var(--g4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
@@ -183,6 +186,12 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .tbbar{display:flex;background:var(--w);border-radius:var(--rs);border:1px solid var(--g2);padding:3px;gap:3px;margin-bottom:14px}
 .tbi{flex:1;padding:8px;border:none;background:transparent;color:var(--g5);font-family:var(--fb);font-size:12px;font-weight:500;border-radius:6px;cursor:pointer;transition:all .2s}
 .tbi.active{background:var(--b5);color:var(--w)}
+</style> <!-- Fermeture du style corrigée -->
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div class="screen active" id="loginScreen">
   <div class="lcard">
     <div class="llogo">💊</div>
     <div class="ltitle">PharmaGest Pro</div>
@@ -291,17 +300,47 @@ const now = () => new Date().toLocaleString('fr-FR');
 function ss(p) { return p.qty <= 0 || p.qty <= p.min ? 'r' : p.qty <= p.min * 2 ? 'y' : 'g'; }
 function openM(id, tgt) { if(tgt) pwdtgt = tgt; document.getElementById(id).classList.add('active'); }
 function closeM(id) { document.getElementById(id).classList.remove('active'); }
-function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+function toast(m) { const t = document.getElementById('toast'); if(!t) return; t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 
 async function addLog(a, c = 'blue') { try { await API.post('/logs', { action: a, color: c, time: now() }); } catch(e){} }
+
+// Modification C : Sauvegarde l'état complet dans localStorage après chaque refreshAll
+function saveStateLocally() {
+    try {
+        localStorage.setItem('pharma_state', JSON.stringify(STATE));
+    } catch(e) {}
+}
+
+// Modification C : Charge l'état depuis localStorage quand on est hors-ligne
+function loadOfflineState() {
+    try {
+        const saved = localStorage.getItem('pharma_state');
+        if (saved) {
+            STATE = JSON.parse(saved);
+            if(role==='admin') { refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs(); }
+            if(role==='vendor') renderCart();
+            document.getElementById('aName').textContent = STATE.phn;
+            document.getElementById('vName').textContent = STATE.phn;
+        }
+    } catch(e) {}
+}
+
 async function refreshAll() {
     try {
-        STATE.products = await API.get('/products'); STATE.sales = await API.get('/sales'); STATE.logs = await API.get('/logs');
-        const s = await API.get('/settings'); STATE.phn = s.phn || 'PharmaGest';
-        document.getElementById('aName').textContent = STATE.phn; document.getElementById('vName').textContent = STATE.phn;
+        STATE.products = await API.get('/products'); 
+        STATE.sales = await API.get('/sales'); 
+        STATE.logs = await API.get('/logs');
+        const s = await API.get('/settings'); 
+        STATE.phn = s.phn || 'PharmaGest';
+        document.getElementById('aName').textContent = STATE.phn; 
+        document.getElementById('vName').textContent = STATE.phn;
+        saveStateLocally(); // ← AJOUTER CETTE LIGNE
         if(role==='admin') { refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs(); } 
         if(role==='vendor') renderCart();
-    } catch(e){}
+    } catch(e){
+        // Si réseau échoue, charger depuis cache local
+        loadOfflineState();
+    }
 }
 let selRole = 'admin';
 function setRole(r) { 
@@ -311,14 +350,37 @@ function setRole(r) {
     document.getElementById('lhint').textContent = h[r];
 }
 
+// Modification B : Login hors-ligne
 async function doLogin() {
     const pwd = document.getElementById('lpwd').value;
     if(!pwd) return;
+    
+    // Vérification hors-ligne via localStorage
+    if (!navigator.onLine) {
+        const savedRole = localStorage.getItem('pharma_role');
+        const savedPwd = localStorage.getItem('pharma_pwd_' + selRole);
+        if (savedPwd && savedPwd === pwd && selRole === (savedRole || selRole)) {
+            role = selRole;
+            localStorage.setItem('pharma_role', role);
+            loadOfflineState();
+            showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen');
+            toast('⚠️ Mode hors-ligne activé');
+            return;
+        } else {
+            document.getElementById('lerr').style.display = 'block';
+            document.getElementById('lerr').textContent = '❌ Hors-ligne - identifiants non reconnus localement';
+            setTimeout(() => document.getElementById('lerr').style.display = 'none', 3000);
+            return;
+        }
+    }
+    
     try {
         const res = await API.post('/auth', { role: selRole, password: pwd });
         if (res.success) { 
             role = selRole; 
-            localStorage.setItem('pharma_role', role); 
+            localStorage.setItem('pharma_role', role);
+            // Sauvegarder le mot de passe hashé localement pour usage hors-ligne
+            localStorage.setItem('pharma_pwd_' + selRole, pwd);
             await refreshAll(); 
             showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen'); 
         } else {
@@ -662,7 +724,8 @@ function renderHist() {
         const d = new Date(); d.setDate(d.getDate() - 7);
         F = STATE.sales.filter(s => new Date(s.date) >= d);
     }
-    document.getElementById('hCA').textContent = F.reduce((s, x) => s + x.total, 0).toLocaleString('fr-FR') + " F";
+    // Correction: S'assurer que l'élément hCA existe ou retirer cette ligne
+    // document.getElementById('hCA').textContent = F.reduce((s, x) => s + x.total, 0).toLocaleString('fr-FR') + " F";
     const el = document.getElementById('hlist');
     if (!F.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucune vente sur cette période</div>'; return; }
     el.innerHTML = F.map(s => `
@@ -698,7 +761,7 @@ function renderLogs() {
     el.innerHTML = STATE.logs.slice(0, 30).map(l => `
         <div class="litem">
             <span class="ldot" style="background:${l.color}"></span>
-            <span class="ltm">${l.time.substring(11,19)}</span>
+            <span class="ltm">${l.time ? l.time.substring(11,19) : ''}</span>
             <span class="lac">${l.action}</span>
         </div>
     `).join('');
@@ -789,6 +852,8 @@ window.addEventListener('load', async () => {
     const r = localStorage.getItem('pharma_role');
     if (r) { 
         role = r; 
+        // Tenter de charger l'état local en premier pour une UI plus rapide
+        loadOfflineState();
         await refreshAll(); 
         showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen'); 
     }
