@@ -1,13 +1,21 @@
 {
-  "name": "PharmaGest Pro",
   "short_name": "PharmaGest",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0a1628",
-  "theme_color": "#2563eb",
-  "prefer_related_applications": false,
+  "name": "PharmaGest Pro - Cloud",
   "icons": [
-    {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
-  ]
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#2563eb",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#2563eb"
 }
