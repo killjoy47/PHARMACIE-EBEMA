@@ -105,9 +105,16 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .nitem.active{color:var(--b5)}
 .nitem i{font-size:19px}
 .acontent{flex:1;overflow-y:auto;padding:16px;padding-bottom:92px}
-/* Modification A : Ajout des règles manquantes pour .psec */
 .psec{display:none}
 .psec.active{display:block}
+/* ✅ Nouvelles classes ajoutées */
+.hidden{display:none}
+.fab{position:fixed;bottom:76px;right:20px;width:52px;height:52px;background:var(--b5);border:none;border-radius:50%;color:var(--w);font-size:22px;cursor:pointer;box-shadow:var(--shm);display:none;align-items:center;justify-content:center;z-index:99}
+.fab.show{display:flex}
+.fbar{display:flex;gap:8px;margin-bottom:14px}
+.fchip{padding:7px 14px;border-radius:20px;border:1px solid var(--g2);background:var(--w);color:var(--g5);font-family:var(--fb);font-size:12px;font-weight:500;cursor:pointer}
+.fchip.active{background:var(--b5);color:var(--w);border-color:var(--b5)}
+
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 .sc{background:var(--w);border-radius:var(--r);border:1px solid var(--g2);padding:16px;box-shadow:var(--sh)}
 .sclb{font-size:11px;font-weight:600;color:var(--g4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
@@ -186,7 +193,9 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 .tbbar{display:flex;background:var(--w);border-radius:var(--rs);border:1px solid var(--g2);padding:3px;gap:3px;margin-bottom:14px}
 .tbi{flex:1;padding:8px;border:none;background:transparent;color:var(--g5);font-family:var(--fb);font-size:12px;font-weight:500;border-radius:6px;cursor:pointer;transition:all .2s}
 .tbi.active{background:var(--b5);color:var(--w)}
-</style> <!-- Fermeture du style corrigée -->
+/* ✅ Style pour le toast */
+#toast.show{opacity:1}
+</style>
 </head>
 <body>
 
@@ -284,6 +293,9 @@ body{font-family:var(--fb);background:var(--g0);color:var(--g8);min-height:100vh
 <div class="moverlay" id="mDetail"><div class="modal"><div id="mDetailContent"></div><button class="bsec" onclick="closeM('mDetail')">Fermer</button></div></div>
 <div class="soverlay" id="sov"><div class="scard">✅ Vente validée !<div id="sdet"></div><div id="smon"></div><button class="bpri" onclick="closeSuccess()">Ok</button></div></div>
 
+<!-- ✅ Toast ajouté -->
+<div id="toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none"></div>
+
 <script>
 const API_URL = '/api';
 const API = {
@@ -304,14 +316,9 @@ function toast(m) { const t = document.getElementById('toast'); if(!t) return; t
 
 async function addLog(a, c = 'blue') { try { await API.post('/logs', { action: a, color: c, time: now() }); } catch(e){} }
 
-// Modification C : Sauvegarde l'état complet dans localStorage après chaque refreshAll
 function saveStateLocally() {
-    try {
-        localStorage.setItem('pharma_state', JSON.stringify(STATE));
-    } catch(e) {}
+    try { localStorage.setItem('pharma_state', JSON.stringify(STATE)); } catch(e) {}
 }
-
-// Modification C : Charge l'état depuis localStorage quand on est hors-ligne
 function loadOfflineState() {
     try {
         const saved = localStorage.getItem('pharma_state');
@@ -334,14 +341,12 @@ async function refreshAll() {
         STATE.phn = s.phn || 'PharmaGest';
         document.getElementById('aName').textContent = STATE.phn; 
         document.getElementById('vName').textContent = STATE.phn;
-        saveStateLocally(); // ← AJOUTER CETTE LIGNE
+        saveStateLocally();
         if(role==='admin') { refreshDash(); renderProds(); renderHist(); renderStats(); renderLogs(); } 
         if(role==='vendor') renderCart();
-    } catch(e){
-        // Si réseau échoue, charger depuis cache local
-        loadOfflineState();
-    }
+    } catch(e){ loadOfflineState(); }
 }
+
 let selRole = 'admin';
 function setRole(r) { 
     selRole = r; 
@@ -350,12 +355,9 @@ function setRole(r) {
     document.getElementById('lhint').textContent = h[r];
 }
 
-// Modification B : Login hors-ligne
 async function doLogin() {
     const pwd = document.getElementById('lpwd').value;
     if(!pwd) return;
-    
-    // Vérification hors-ligne via localStorage
     if (!navigator.onLine) {
         const savedRole = localStorage.getItem('pharma_role');
         const savedPwd = localStorage.getItem('pharma_pwd_' + selRole);
@@ -373,13 +375,11 @@ async function doLogin() {
             return;
         }
     }
-    
     try {
         const res = await API.post('/auth', { role: selRole, password: pwd });
         if (res.success) { 
             role = selRole; 
             localStorage.setItem('pharma_role', role);
-            // Sauvegarder le mot de passe hashé localement pour usage hors-ligne
             localStorage.setItem('pharma_pwd_' + selRole, pwd);
             await refreshAll(); 
             showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen'); 
@@ -390,17 +390,8 @@ async function doLogin() {
     } catch (e) { toast('❌ Erreur de connexion'); }
 }
 
-function logout() { 
-    role = null; 
-    localStorage.removeItem('pharma_role'); 
-    showScr('loginScreen'); 
-    document.getElementById('lpwd').value = '';
-}
-
-function showScr(id) { 
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
-    document.getElementById(id).classList.add('active'); 
-}
+function logout() { role = null; localStorage.removeItem('pharma_role'); showScr('loginScreen'); document.getElementById('lpwd').value = ''; }
+function showScr(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
 
 function onSearch() {
     const q = document.getElementById('srch').value.toLowerCase(), sg = document.getElementById('sugs');
@@ -420,19 +411,13 @@ function addToCart(id) {
     const p = STATE.products.find(x => x.id === id); 
     if (!p || p.qty <= 0) return toast('❌ Produit épuisé');
     const ex = cart.find(x => x.id === id); 
-    if (ex) {
-        if (ex.qty >= p.qty) return toast('⚠️ Stock max atteint');
-        ex.qty++; 
-    } else {
-        cart.push({ id: p.id, name: p.name, ps: p.ps, qty: 1, max: p.qty });
-    }
+    if (ex) { if (ex.qty >= p.qty) return toast('⚠️ Stock max atteint'); ex.qty++; } 
+    else cart.push({ id: p.id, name: p.name, ps: p.ps, qty: 1, max: p.qty });
     renderCart(); 
     document.getElementById('sugs').style.display = 'none';
     document.getElementById('srch').value = '';
 }
-
 function clearCart() { if(confirm('Vider le panier ?')) { cart = []; renderCart(); } }
-
 function chgQty(id, d) { 
     const i = cart.find(x => x.id === id); 
     if (i) {
@@ -442,7 +427,6 @@ function chgQty(id, d) {
         else toast('⚠️ Stock max atteint');
     }
 }
-
 function setQty(id, v) { 
     const i = cart.find(x => x.id === id); 
     if (i) {
@@ -451,9 +435,7 @@ function setQty(id, v) {
         else { i.qty = Math.min(n, i.max); renderCart(); }
     }
 }
-
 function total() { return cart.reduce((s, i) => s + i.ps * i.qty, 0); }
-
 function renderCart() {
     const el = document.getElementById('citems'), pp = document.getElementById('ppanel');
     document.getElementById('ccnt').textContent = cart.length;
@@ -479,49 +461,24 @@ function renderCart() {
 }
 function calcM() { 
     const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0; 
-    const m = v - t;
-    const el = document.getElementById('mval');
-    const disp = document.getElementById('mdisp');
-    el.textContent = f(m); 
-    disp.classList.toggle('err', m < 0);
+    const m = v - t, el = document.getElementById('mval'), disp = document.getElementById('mdisp');
+    el.textContent = f(m); disp.classList.toggle('err', m < 0);
 }
 
 async function validateSale() {
     const t = total(), v = parseFloat(document.getElementById('pamt').value) || 0; 
     if (v < t) return toast('❌ Somme insuffisante');
-    
-    const sale = { 
-        items: cart, 
-        total: t, 
-        versee: v, 
-        monnaie: v - t, 
-        date: td(), 
-        dt: now(), 
-        vendor: role 
-    };
-
+    const sale = { items: cart, total: t, versee: v, monnaie: v - t, date: td(), dt: now(), vendor: role };
     try {
-        if (!navigator.onLine) {
-            await saveOfflineSale(sale);
-            toast('💾 Vente enregistrée localement (Hors-ligne)');
-        } else {
-            await API.post('/sales', sale);
-        }
-        
+        if (!navigator.onLine) { await saveOfflineSale(sale); toast('💾 Vente enregistrée localement (Hors-ligne)'); }
+        else { await API.post('/sales', sale); }
         document.getElementById('sdet').textContent = cart.length + " article(s)";
         document.getElementById('smon').textContent = "Monnaie: " + f(v-t);
         document.getElementById('sov').classList.add('active');
-        
-        cart = []; 
-        renderCart(); 
-        document.getElementById('pamt').value = '';
+        cart = []; renderCart(); document.getElementById('pamt').value = '';
         await refreshAll();
-    } catch (e) { 
-        toast('❌ Erreur, enregistrement local...'); 
-        await saveOfflineSale(sale);
-    }
+    } catch (e) { toast('❌ Erreur, enregistrement local...'); await saveOfflineSale(sale); }
 }
-
 function closeSuccess() { document.getElementById('sov').classList.remove('active'); }
 
 function anav(p, b) {
@@ -529,59 +486,38 @@ function anav(p, b) {
     b.classList.add('active');
     document.querySelectorAll('.psec').forEach(s => s.classList.remove('active'));
     document.getElementById('page' + p).classList.add('active');
-    const f = document.getElementById('fab');
-    if (f) f.classList.toggle('show', p === 'Products');
+    document.getElementById('fab').classList.toggle('show', p === 'Products');
 }
 
 function refreshDash() {
     const ts = STATE.sales.filter(s => s.date === td());
-    const ca = ts.reduce((s, x) => s + x.total, 0);
-    document.getElementById('dCA').textContent = ca.toLocaleString('fr-FR');
+    document.getElementById('dCA').textContent = ts.reduce((s,x)=>s+x.total,0).toLocaleString('fr-FR');
     document.getElementById('dSales').textContent = ts.length;
-    
-    const dr = STATE.products.filter(p => ss(p) === 'r');
-    const dy = STATE.products.filter(p => ss(p) === 'y');
+    const dr = STATE.products.filter(p => ss(p) === 'r'), dy = STATE.products.filter(p => ss(p) === 'y');
     document.getElementById('dRed').textContent = dr.length;
     document.getElementById('dYel').textContent = dy.length;
-    
+    const alerts = [...dr.map(p=>({...p,s:'red'})), ...dy.map(p=>({...p,s:'yel'}))];
     const al = document.getElementById('alist');
-    const alerts = [
-        ...dr.map(p => ({...p, s: 'red'})),
-        ...dy.map(p => ({...p, s: 'yel'}))
-    ];
-    
-    if (!alerts.length) { 
-        al.innerHTML = '<div style="font-size:13px;color:var(--g4);padding:8px 0;text-align:center">✅ Stock optimal</div>'; 
-        return; 
-    }
+    if (!alerts.length) { al.innerHTML = '<div style="font-size:13px;color:var(--g4);padding:8px 0;text-align:center">✅ Stock optimal</div>'; return; }
     al.innerHTML = alerts.map(p => `
-        <div class="aitem ${p.s === 'red' ? 'red' : 'yel'}">
+        <div class="aitem ${p.s==='red'?'red':'yel'}">
             <span class="aname">${p.name}</span>
-            <span class="sbadge ${p.s === 'red' ? 'sr' : 'sy'}">${p.qty} en stock</span>
+            <span class="sbadge ${p.s==='red'?'sr':'sy'}">${p.qty} en stock</span>
         </div>
     `).join('');
 }
 function renderProds() {
     const el = document.getElementById('plist');
-    if (!STATE.products.length) { 
-        el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucun médicament en stock</div>'; 
-        return; 
-    }
+    if (!STATE.products.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucun médicament en stock</div>'; return; }
     el.innerHTML = STATE.products.map(p => `
         <div class="pcard" style="margin-bottom:12px">
             <div class="pchd">
-                <div>
-                    <div class="pn">${p.name}</div>
-                    <div style="font-size:11px;font-weight:600;margin-top:4px" class="${ss(p) === 'r' ? 'sr' : ss(p) === 'y' ? 'sy' : 'sg'}">${p.qty} en stock</div>
-                </div>
-                <div class="pacts">
-                    <button class="bsm bedit" onclick="editProd(${p.id})">Modifier</button>
-                    <button class="bsm bdel" onclick="delProd(${p.id})">Suppr</button>
-                </div>
+                <div><div class="pn">${p.name}</div><div style="font-size:11px;font-weight:600;margin-top:4px" class="${ss(p)==='r'?'sr':ss(p)==='y'?'sy':'sg'}">${p.qty} en stock</div></div>
+                <div class="pacts"><button class="bsm bedit" onclick="editProd(${p.id})">Modifier</button><button class="bsm bdel" onclick="delProd(${p.id})">Suppr</button></div>
             </div>
             <div class="pig2">
                 <div class="pi"><div class="pil">Prix vente</div><div class="piv">${p.ps.toLocaleString()} F</div></div>
-                <div class="pi"><div class="pil">Prix achat</div><div class="piv">${p.pb ? p.pb.toLocaleString() + ' F' : '—'}</div></div>
+                <div class="pi"><div class="pil">Prix achat</div><div class="piv">${p.pb ? p.pb.toLocaleString()+' F':'—'}</div></div>
                 <div class="pi"><div class="pil">Seuil</div><div class="piv">${p.min}</div></div>
             </div>
             <div style="display:flex;gap:6px;margin-top:12px">
@@ -591,39 +527,27 @@ function renderProds() {
         </div>
     `).join('');
 }
-
 function srchAdmin(q) {
     const el = document.getElementById('srchList'), Q = q.trim().toLowerCase();
     if (!Q) { el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--g4)">Entrez un nom de médicament...</div>'; return; }
     const F = STATE.products.filter(p => p.name.toLowerCase().includes(Q));
     if (!F.length) { el.innerHTML = '<div style="text-align:center;padding:24px;color:var(--g4)">Aucun résultat trouvé</div>'; return; }
-    el.innerHTML = F.map(p => `
-        <div class="pcard" style="margin-bottom:12px">
-            <div class="pchd">
-                <div class="pn">${p.name}</div>
-                <button class="bsm bedit" onclick="editProd(${p.id})">Gérer</button>
-            </div>
-        </div>
-    `).join('');
+    el.innerHTML = F.map(p => `<div class="pcard" style="margin-bottom:12px"><div class="pchd"><div class="pn">${p.name}</div><button class="bsm bedit" onclick="editProd(${p.id})">Gérer</button></div></div>`).join('');
 }
-
 function setpt(t, b) {
     document.querySelectorAll('#pageProducts .tbi').forEach(i => i.classList.remove('active'));
     b.classList.add('active');
     document.getElementById('ptList').classList.toggle('hidden', t !== 'list');
     document.getElementById('ptSearch').classList.toggle('hidden', t !== 'search');
 }
-
 function openAddModal() {
     document.getElementById('epid').value = '';
     document.getElementById('mProductTitle').textContent = '➕ Ajouter un médicament';
-    ['fn', 'fps', 'fpb', 'fq', 'fm'].forEach(id => document.getElementById(id).value = '');
+    ['fn','fps','fpb','fq','fm'].forEach(id => document.getElementById(id).value = '');
     openM('mProduct');
 }
-
 function editProd(id) {
-    const p = STATE.products.find(x => x.id === id);
-    if (!p) return;
+    const p = STATE.products.find(x => x.id === id); if(!p) return;
     document.getElementById('epid').value = id;
     document.getElementById('mProductTitle').textContent = '✏️ Modifier ' + p.name;
     document.getElementById('fn').value = p.name;
@@ -633,230 +557,83 @@ function editProd(id) {
     document.getElementById('fm').value = p.min;
     openM('mProduct');
 }
-
 async function saveProduct() {
-    const name = document.getElementById('fn').value.trim(), 
-          ps = parseFloat(document.getElementById('fps').value) || 0,
-          pb = parseFloat(document.getElementById('fpb').value) || 0, 
-          qty = parseInt(document.getElementById('fq').value) || 0, 
-          min = parseInt(document.getElementById('fm').value) || 5;
-    
-    if (!name || !ps) { toast('⚠️ Nom et prix obligatoires'); return; }
-    
+    const name = document.getElementById('fn').value.trim(), ps = parseFloat(document.getElementById('fps').value)||0, pb = parseFloat(document.getElementById('fpb').value)||0, qty = parseInt(document.getElementById('fq').value)||0, min = parseInt(document.getElementById('fm').value)||5;
+    if(!name||!ps) return toast('⚠️ Nom et prix obligatoires');
     const eid = document.getElementById('epid').value;
     try {
-        if (eid) {
-            await API.put('/products/' + eid, { name, ps, pb, qty, min });
-            await addLog('Produit modifié : ' + name, 'blue');
-        } else {
-            await API.post('/products', { name, ps, pb, qty, min });
-            await addLog('Nouveau produit : ' + name, 'green');
-        }
-        await refreshAll(); 
-        closeM('mProduct'); 
-        toast('✅ Enregistré avec succès');
-    } catch (e) { toast('❌ Erreur lors de l\'enregistrement'); }
+        if(eid) { await API.put('/products/'+eid, {name,ps,pb,qty,min}); await addLog('Produit modifié : '+name,'blue'); }
+        else { await API.post('/products', {name,ps,pb,qty,min}); await addLog('Nouveau produit : '+name,'green'); }
+        await refreshAll(); closeM('mProduct'); toast('✅ Enregistré avec succès');
+    } catch(e) { toast('❌ Erreur'); }
 }
-
 async function delProd(id) {
-    if (!confirm('Supprimer définitivement ce médicament ?')) return;
-    try {
-        await API.delete('/products/' + id);
-        await addLog('Produit supprimé ID: ' + id, 'red');
-        await refreshAll();
-        toast('🗑️ Produit supprimé');
-    } catch (e) { toast('❌ Erreur de suppression'); }
+    if(!confirm('Supprimer définitivement ?')) return;
+    try { await API.delete('/products/'+id); await addLog('Produit supprimé ID: '+id,'red'); await refreshAll(); toast('🗑️ Supprimé'); } catch(e) { toast('❌ Erreur'); }
 }
-function openRestock(id) {
-    const p = STATE.products.find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('rpid').value = id;
-    document.getElementById('rpname').textContent = p.name + ' (stock: ' + p.qty + ')';
-    document.getElementById('rq').value = '';
-    openM('mRestock');
-}
-
+function openRestock(id) { const p = STATE.products.find(x=>x.id===id); if(!p) return; document.getElementById('rpid').value=id; document.getElementById('rpname').textContent = p.name+' (stock: '+p.qty+')'; document.getElementById('rq').value=''; openM('mRestock'); }
 async function doRestock() {
-    const id = parseInt(document.getElementById('rpid').value), 
-          q = parseInt(document.getElementById('rq').value) || 0;
-    if (q <= 0) return toast('⚠️ Quantité invalide');
-    const p = STATE.products.find(x => x.id === id);
-    try {
-        await API.put('/products/' + id, { ...p, qty: p.qty + q });
-        await addLog(`Réappro ${p.name} : +${q}`, 'green');
-        await refreshAll(); closeM('mRestock'); toast('✅ Stock mis à jour');
-    } catch (e) { toast('❌ Erreur'); }
+    const id = parseInt(document.getElementById('rpid').value), q = parseInt(document.getElementById('rq').value)||0;
+    if(q<=0) return toast('⚠️ Quantité invalide');
+    const p = STATE.products.find(x=>x.id===id);
+    try { await API.put('/products/'+id, {...p, qty: p.qty+q}); await addLog(`Réappro ${p.name} : +${q}`,'green'); await refreshAll(); closeM('mRestock'); toast('✅ Stock mis à jour'); } catch(e) { toast('❌ Erreur'); }
 }
-
-function openAdjust(id) {
-    const p = STATE.products.find(x => x.id === id);
-    if (!p) return;
-    document.getElementById('ajpid').value = id;
-    document.getElementById('ajq').value = p.qty;
-    document.getElementById('ajr').value = '';
-    openM('mAdjust');
-}
-
+function openAdjust(id) { const p = STATE.products.find(x=>x.id===id); if(!p) return; document.getElementById('ajpid').value=id; document.getElementById('ajq').value=p.qty; document.getElementById('ajr').value=''; openM('mAdjust'); }
 async function doAdjust() {
-    const id = parseInt(document.getElementById('ajpid').value), 
-          q = parseInt(document.getElementById('ajq').value), 
-          r = document.getElementById('ajr').value.trim();
-    if (isNaN(q) || q < 0 || !r) return toast('⚠️ Valeurs invalides');
-    const p = STATE.products.find(x => x.id === id);
-    try {
-        await API.put('/products/' + id, { ...p, qty: q });
-        await addLog(`Ajustement ${p.name} : ${q} (${r})`, 'yellow');
-        await refreshAll(); closeM('mAdjust'); toast('✅ Ajusté');
-    } catch (e) { toast('❌ Erreur'); }
+    const id = parseInt(document.getElementById('ajpid').value), q = parseInt(document.getElementById('ajq').value), r = document.getElementById('ajr').value.trim();
+    if(isNaN(q)||q<0||!r) return toast('⚠️ Valeurs invalides');
+    const p = STATE.products.find(x=>x.id===id);
+    try { await API.put('/products/'+id, {...p, qty: q}); await addLog(`Ajustement ${p.name} : ${q} (${r})`,'yellow'); await refreshAll(); closeM('mAdjust'); toast('✅ Ajusté'); } catch(e) { toast('❌ Erreur'); }
 }
-
-function fh(f, b) {
-    hf = f;
-    document.querySelectorAll('.fchip').forEach(c => c.classList.remove('active'));
-    b.classList.add('active');
-    renderHist();
-}
-
+function fh(f, b) { hf = f; document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active')); b.classList.add('active'); renderHist(); }
 function renderHist() {
     let F = STATE.sales;
-    if (hf === 'today') F = STATE.sales.filter(s => s.date === td());
-    if (hf === 'week') {
-        const d = new Date(); d.setDate(d.getDate() - 7);
-        F = STATE.sales.filter(s => new Date(s.date) >= d);
-    }
-    // Correction: S'assurer que l'élément hCA existe ou retirer cette ligne
-    // document.getElementById('hCA').textContent = F.reduce((s, x) => s + x.total, 0).toLocaleString('fr-FR') + " F";
+    if(hf==='today') F = STATE.sales.filter(s=>s.date===td());
+    if(hf==='week') { const d = new Date(); d.setDate(d.getDate()-7); F = STATE.sales.filter(s=>new Date(s.date)>=d); }
     const el = document.getElementById('hlist');
-    if (!F.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucune vente sur cette période</div>'; return; }
+    if(!F.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucune vente</div>'; return; }
     el.innerHTML = F.map(s => `
         <div class="hitem">
             <div class="hhd"><span>🧾 #${s.id}</span><span class="httl">${f(s.total)}</span></div>
-            <div class="hdt">${s.dt} - ${s.vendor || 'vendeur'}</div>
-            <div class="hitms">${s.items.map(i => `${i.name} × ${i.qty}`).join(' • ')}</div>
+            <div class="hdt">${s.dt} - ${s.vendor||'vendeur'}</div>
+            <div class="hitms">${s.items.map(i=>`${i.name} × ${i.qty}`).join(' • ')}</div>
         </div>
     `).join('');
 }
-
 function renderStats() {
     const days = [];
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        const ds = d.toISOString().split('T')[0];
-        const t = STATE.sales.filter(s => s.date === ds).reduce((s, x) => s + x.total, 0);
-        days.push({ lb: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][d.getDay()], t, v: t.toLocaleString() });
-    }
-    const mx = Math.max(...days.map(d => d.t), 1);
-    document.getElementById('cbars').innerHTML = days.map(d => `
-        <div class="cbw">
-            <div class="cbv">${d.v}</div>
-            <div class="cb" style="height:${(d.t / mx) * 100}%"></div>
-            <div class="cbl">${d.lb}</div>
-        </div>
-    `).join('');
+    for(let i=6; i>=0; i--) { const d=new Date(); d.setDate(d.getDate()-i); const ds=d.toISOString().split('T')[0]; const t=STATE.sales.filter(s=>s.date===ds).reduce((s,x)=>s+x.total,0); days.push({lb:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'][d.getDay()],t,v:t.toLocaleString()}); }
+    const mx = Math.max(...days.map(d=>d.t),1);
+    document.getElementById('cbars').innerHTML = days.map(d=>`<div class="cbw"><div class="cbv">${d.v}</div><div class="cb" style="height:${(d.t/mx)*100}%"></div><div class="cbl">${d.lb}</div></div>`).join('');
 }
-
 function renderLogs() {
     const el = document.getElementById('llist');
-    if (!STATE.logs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucun journal d\'activité</div>'; return; }
-    el.innerHTML = STATE.logs.slice(0, 30).map(l => `
-        <div class="litem">
-            <span class="ldot" style="background:${l.color}"></span>
-            <span class="ltm">${l.time ? l.time.substring(11,19) : ''}</span>
-            <span class="lac">${l.action}</span>
-        </div>
-    `).join('');
+    if(!STATE.logs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--g4)">Aucun journal</div>'; return; }
+    el.innerHTML = STATE.logs.slice(0,30).map(l=>`<div class="litem"><span class="ldot" style="background:${l.color}"></span><span class="ltm">${l.time?l.time.substring(11,19):''}</span><span class="lac">${l.action}</span></div>`).join('');
 }
-async function savePhName() {
-    const n = document.getElementById('fphn').value.trim();
-    if (!n) return;
-    try { 
-        await API.post('/settings', { key: 'phn', value: n }); 
-        await refreshAll(); 
-        closeM('mPhName'); 
-        toast('✅ Nom mis à jour'); 
-    } catch(e){ toast('❌ Erreur'); }
-}
-
+async function savePhName() { const n = document.getElementById('fphn').value.trim(); if(!n) return; try { await API.post('/settings',{key:'phn',value:n}); await refreshAll(); closeM('mPhName'); toast('✅ Nom mis à jour'); } catch(e) { toast('❌ Erreur'); } }
 async function doChPwd() {
-    const mp = document.getElementById('mpv').value, 
-          np = document.getElementById('np').value, 
-          cp = document.getElementById('cnp').value;
-    if (np !== cp || !np) return toast('❌ Les mots de passe ne correspondent pas');
+    const mp = document.getElementById('mpv').value, np = document.getElementById('np').value, cp = document.getElementById('cnp').value;
+    if(np!==cp||!np) return toast('❌ Mots de passe différents');
     try {
-        const res = await API.post('/auth/change', { masterPwd: mp, targetRole: pwdtgt, newPwd: np });
-        if (res.success) { 
-            closeM('mChPwd'); 
-            toast('✅ Mot de passe changé'); 
-            document.getElementById('mpv').value = '';
-            document.getElementById('np').value = '';
-            document.getElementById('cnp').value = '';
-        } else {
-            toast('❌ ' + (res.error || 'Erreur maître'));
-        }
-    } catch(e){ toast('❌ Erreur serveur'); }
+        const res = await API.post('/auth/change', {masterPwd: mp, targetRole: pwdtgt, newPwd: np});
+        if(res.success) { closeM('mChPwd'); toast('✅ Mot de passe changé'); document.getElementById('mpv').value=document.getElementById('np').value=document.getElementById('cnp').value=''; }
+        else toast('❌ '+(res.error||'Erreur maître'));
+    } catch(e) { toast('❌ Erreur serveur'); }
 }
-
-let db;
-const req = indexedDB.open('pharmaDB', 1);
-req.onupgradeneeded = e => { 
-    db = e.target.result; 
-    if (!db.objectStoreNames.contains('pending_sales')) {
-        db.createObjectStore('pending_sales', { keyPath: 'id', autoIncrement: true }); 
-    }
-};
-req.onsuccess = e => { db = e.target.result; syncOfflineData(); };
-
-async function saveOfflineSale(s) { 
-    const tx = db.transaction('pending_sales', 'readwrite'); 
-    tx.objectStore('pending_sales').add(s); 
-}
-
-async function getOfflineSales() { 
-    const tx = db.transaction('pending_sales', 'readonly'); 
-    return new Promise(r => { 
-        const req = tx.objectStore('pending_sales').getAll(); 
-        req.onsuccess = () => r(req.result); 
-    }); 
-}
-
-async function clearOfflineSales() { 
-    const tx = db.transaction('pending_sales', 'readwrite'); 
-    tx.objectStore('pending_sales').clear(); 
-}
-
+let db; const req = indexedDB.open('pharmaDB',1); req.onupgradeneeded=e=>{ db=e.target.result; if(!db.objectStoreNames.contains('pending_sales')) db.createObjectStore('pending_sales',{keyPath:'id',autoIncrement:true}); }; req.onsuccess=e=>{ db=e.target.result; syncOfflineData(); };
+async function saveOfflineSale(s) { const tx=db.transaction('pending_sales','readwrite'); tx.objectStore('pending_sales').add(s); }
+async function getOfflineSales() { const tx=db.transaction('pending_sales','readonly'); return new Promise(r=>{ const req=tx.objectStore('pending_sales').getAll(); req.onsuccess=()=>r(req.result); }); }
+async function clearOfflineSales() { const tx=db.transaction('pending_sales','readwrite'); tx.objectStore('pending_sales').clear(); }
 async function syncOfflineData() {
-    if (!navigator.onLine) return;
-    try {
-        const sales = await getOfflineSales();
-        if (sales && sales.length > 0) {
-            toast('🔄 Synchronisation des données...');
-            for (const s of sales) { 
-                try { await API.post('/sales', s); } catch (e) { console.error(e); } 
-            }
-            await clearOfflineSales(); 
-            await refreshAll(); 
-            toast('✅ Données synchronisées !');
-        }
-    } catch (err) { console.error("Sync error:", err); }
+    if(!navigator.onLine) return;
+    try { const sales=await getOfflineSales(); if(sales&&sales.length){ toast('🔄 Synchronisation...'); for(const s of sales) { try{await API.post('/sales',s);}catch(e){} } await clearOfflineSales(); await refreshAll(); toast('✅ Synchronisé'); } } catch(e) {}
 }
-
-window.addEventListener('online', () => { syncOfflineData(); refreshAll(); });
-
-window.addEventListener('load', async () => {
-    // Enregistrement du Service Worker pour le mode PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW error:", err));
-    }
-    
-    // Auto-login si session existante
+window.addEventListener('online',()=>{ syncOfflineData(); refreshAll(); });
+window.addEventListener('load',async ()=>{
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
     const r = localStorage.getItem('pharma_role');
-    if (r) { 
-        role = r; 
-        // Tenter de charger l'état local en premier pour une UI plus rapide
-        loadOfflineState();
-        await refreshAll(); 
-        showScr(role === 'admin' ? 'adminScreen' : 'vendorScreen'); 
-    }
+    if(r) { role=r; loadOfflineState(); await refreshAll(); showScr(role==='admin'?'adminScreen':'vendorScreen'); }
 });
 </script>
 </body>
